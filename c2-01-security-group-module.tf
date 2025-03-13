@@ -1,3 +1,4 @@
+# Define Security Group
 module "security_group" {
   count = var.create_security_group ? 1 : 0
 
