@@ -195,5 +195,12 @@ resource "aws_msk_cluster" "this" {
     }
   }
 
+  lifecycle {
+    ignore_changes = [
+      # Ignore changes to provisioned_throughput to avoid errors
+      broker_node_group_info[0].storage_info[0].ebs_storage_info[0].provisioned_throughput,
+    ]
+  }
+
   tags = var.tags
 }
