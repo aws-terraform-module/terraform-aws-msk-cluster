@@ -1,6 +1,7 @@
 locals {
   server_properties = join("\n", [for k, v in var.server_properties : format("%s = %s", k, v)])
   enable_logs       = var.s3_logs_bucket != "" || var.cloudwatch_logs_group != "" || var.firehose_logs_delivery_stream != "" ? ["true"] : []
+  broker_security_groups = var.create_security_group ? [module.security_group[0].security_group_id] : var.extra_security_groups
 }
 
 data "aws_subnet" "this" {
@@ -108,7 +109,7 @@ resource "aws_msk_cluster" "this" {
   broker_node_group_info {
     client_subnets  = var.client_subnets
     instance_type   = var.instance_type
-    security_groups = concat(aws_security_group.this[*].id, var.extra_security_groups)
+    security_groups = concat(aws_security_group.this[*].id, local.broker_security_groups)
 
     storage_info {
       ebs_storage_info {
