@@ -136,3 +136,51 @@ variable "provisioned_volume_throughput" {
   type        = number
   default     = null
 }
+
+
+variable "create_security_group" {
+  type    = bool
+  default = false
+}
+
+variable "security_group_name" {
+  type    = string
+  default = "MSK security group name."
+}
+
+variable "security_group_description" {
+  type    = string
+  default = "MSK security group description."
+}
+variable "ingress_with_cidr_blocks" {
+  type        = list(map(string))
+  default     = []
+  description = <<-EOT
+    List of ingress rules to create with CIDR blocks as source.
+    Each rule object requires these attributes:
+      - description: Description of the rule
+      - from_port: Start port range
+      - to_port: End port range  
+      - protocol: Protocol (tcp, udp, icmp, or all)
+      - cidr_blocks: List of IPv4 CIDR blocks
+    
+    Optional attributes:
+      - ipv6_cidr_blocks: List of IPv6 CIDR blocks
+    
+    Note: When 'create_security_group = true', these rules will be applied to the
+    created security group, and the 'extra_security_groups' parameter will be ignored.
+    
+    Example:
+    ```
+    ingress_with_cidr_blocks = [
+      {
+        description = "HTTPS from anywhere"
+        from_port   = 443
+        to_port     = 443
+        protocol    = "tcp"
+        cidr_blocks = ["0.0.0.0/0"]
+      }
+    ]
+    ```
+    EOT
+}
