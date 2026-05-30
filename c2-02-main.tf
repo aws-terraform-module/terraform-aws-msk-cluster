@@ -1,6 +1,6 @@
 locals {
-  server_properties = join("\n", [for k, v in var.server_properties : format("%s = %s", k, v)])
-  enable_logs       = var.s3_logs_bucket != "" || var.cloudwatch_logs_group != "" || var.firehose_logs_delivery_stream != "" ? ["true"] : []
+  server_properties      = join("\n", [for k, v in var.server_properties : format("%s = %s", k, v)])
+  enable_logs            = var.s3_logs_bucket != "" || var.cloudwatch_logs_group != "" || var.firehose_logs_delivery_stream != "" ? ["true"] : []
   broker_security_groups = var.create_security_group ? [module.security_group[0].security_group_id] : var.extra_security_groups
 }
 
